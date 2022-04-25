@@ -26,7 +26,7 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 422);
         }
         if (!$token = Auth::attempt($validator->validated())) {
-            return response()->json(['error' => "Anda tidak memiliki izin"], 401);
+            return response()->json(['error' => "Email atau Password salah"], 401);
         }
         return $this->createNewToken($token);
     }
