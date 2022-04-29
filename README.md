@@ -11,12 +11,12 @@
 
 Copy .env.example and rename to .env
 ## Set database to :
-DB_CONNECTION=pgsql
-DB_HOST=127.0.0.1
-DB_PORT=5432
-DB_DATABASE= // insert database name here
-DB_USERNAME= // insert username here
-DB_PASSWORD= // insert password here
+DB_CONNECTION=pgsql__
+DB_HOST=127.0.0.1__
+DB_PORT=5432__
+DB_DATABASE= // insert database name here__
+DB_USERNAME= // insert username here__
+DB_PASSWORD= // insert password here__
 ## Install composer package
 composer install
 ## Migrate database
