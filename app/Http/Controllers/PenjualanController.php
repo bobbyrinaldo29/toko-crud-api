@@ -78,13 +78,13 @@ class PenjualanController extends Controller
      * @param  \App\Models\Penjualan  $penjualan
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatePenjualanRequest $request, $id)
+    public function update(UpdatePenjualanRequest $request, $id_penjualan)
     {
         $data = $request->validated();
         $idBarang = Barang::where('id', $data['id_barang'])->first();
 
         if ($idBarang) {
-            Penjualan::where('id', $id)->update([
+            Penjualan::where('id_penjualan', $id_penjualan)->update([
                 'id_barang'     => $data['id_barang'],
                 'nama_pembeli'  => $data['nama_pembeli'],
                 'no_hp'         => $data['no_hp'],
