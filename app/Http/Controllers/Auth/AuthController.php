@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Resources\Auth\RegisterResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,45 +15,34 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);   
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email'     => 'required|email',
-            'password'  => 'required|string|min:8',
-        ]);
+        $validator = $request->validated();
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-        if (!$token = Auth::attempt($validator->validated())) {
-            return response()->json(['error' => "Email atau Password salah"], 401);
+        if (!$token = Auth::attempt($validator)) {
+            return response()->json([
+                'error' => "Email atau Password salah"
+            ], 401);
         }
         return $this->createNewToken($token);
     }
 
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name'      => 'required|string|between:2,100',
-            'email'     => 'required|string|email|max:100|unique:users',
-            'password'  => 'required|string|confirmed|min:8',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
+        $validator = $request->validated();
 
         $user = User::create(array_merge(
-            $validator->validated(),
+            $validator,
             ['password' => bcrypt($request->password)]
         ));
 
         return response()->json([
+            'success'   => true,
             'message'   => 'User berhasil didaftarkan',
-            'user'      => $user
+            'user'      => new RegisterResource($user)
         ], 201);
     }
 

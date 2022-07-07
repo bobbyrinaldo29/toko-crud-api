@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBarangRequest;
 use App\Http\Requests\UpdateBarangRequest;
+use App\Http\Resources\BarangResource;
 use App\Models\Barang;
+use Illuminate\Support\Facades\Response;
 
 class BarangController extends Controller
 {
@@ -17,7 +19,11 @@ class BarangController extends Controller
     {
         $getAllData = Barang::all();
 
-        return response()->json($getAllData);
+        return Response::json(array(
+            'success'       => true,
+            'message'       => "All Data",
+            'data'          => BarangResource::collection($getAllData)
+        ), 200);
     }
 
     /**
